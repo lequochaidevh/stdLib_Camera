@@ -114,7 +114,7 @@ int main() {
 
     // Write the data out to file
     ofstream outFile;
-    outFile.open("webcam_output.jpeg", ios::binary| ios::app);
+    outFile.open("webcam_output.jpeg", ios::binary| ios::trunc);
 
     int bufPos = 0, outFileMemBlockSize = 0;  // the position in the buffer and the amoun to copy from
                                         // the buffer
