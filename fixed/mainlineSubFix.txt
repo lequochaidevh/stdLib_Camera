@@ -1,0 +1,31 @@
+F0---------------------------------------------------------------
+Using std::ios::app in the constructor for your std::ofstream tells the program to append to the file and not overwrite it
+
+
+F1---------------------------------------------------------------
+
+how to get a raw image into the buffer? Let's say I want a 640x360 RGB24 image without compression, I set
+
+imageFormat.fmt.pix.pixelformat = V4L2_PIX_FMT_RGB24;
+, and in theory, that should give me 640 * 360 * 3 = 691200 bytes. But instead, I get 706560 bytes.
+
+imageFormat.fmt.pix.sizeimage = width * height * 3 * sizeof(char);
+imageFormat.fmt.pix.bytesperline = 0;
+imageFormat.fmt.pix.colorspace = V4L2_COLORSPACE_RAW;
+
+F2---------------------------------------------------------------
+
+Problem with black image from webcam, same as in this fork comment
+Decision in my case for fix it is add sleep after activating stream in 50 milliseconds:
+
+if(ioctl(fd, VIDIOC_STREAMON, &type) < 0){
+    perror("Could not start streaming, VIDIOC_STREAMON");
+    return 1;
+}
+this_thread::sleep_for(chrono::milliseconds(50));
+I use C++11 libraries thread and chrono for sleeping
+
+#include <chrono>
+#include <thread>
+
+
